@@ -90,6 +90,9 @@ module Mint
       providers =
         compile ast.providers
 
+      styles =
+        compile ast.styles
+
       components =
         compile ast.components
 
@@ -128,7 +131,7 @@ module Mint
         end
 
       elements =
-        (enums + records + modules + providers + routes + components + static + stores + [footer] + suites)
+        (enums + records + modules + providers + routes + components + static + stores + styles + [footer] + suites)
           .reject!(&.empty?)
 
       replace_skipped(js.statements(elements))

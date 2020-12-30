@@ -14,7 +14,7 @@ module Mint
       global_let =
         "let #{name}" if node.global?
 
-      compile node.styles, node
+      compile node.styles
 
       styles =
         node.styles.map do |style_node|

@@ -1,18 +1,27 @@
 module Mint
   class Parser
     syntax_error HtmlStyleExpectedClosingParentheses
+    syntax_error HtmlStyleExpectedDot
 
     def html_style : Ast::HtmlStyle?
       start do |start_position|
-        name = start do
+        head = start do
           skip unless keyword "::"
+
+          styles = type_id
+          char '.', HtmlStyleExpectedDot if styles
+
           skip unless value = variable_with_dashes
-          value
+          {value, styles}
         end
 
-        skip unless name
+        skip unless head
 
-        arguments = [] of Ast::Node
+        name, entity =
+          head
+
+        arguments =
+          [] of Ast::Node
 
         if char! '('
           whitespace
@@ -30,6 +39,7 @@ module Mint
         Ast::HtmlStyle.new(
           arguments: arguments.compact,
           from: start_position,
+          entity: entity,
           to: position,
           input: data,
           name: name)
